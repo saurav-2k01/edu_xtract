@@ -10,8 +10,9 @@ class EduXtract:
     analyser = Analyser
     writer = DocWriter
 
-    def __init__(self, filename = None, read_latex=False, threshold=0.75, output_dir:str ="outputs"):
-        self.filename = filename
+    def __init__(self, filepath = None, read_latex=False, threshold=0.75, output_dir:str ="outputs"):
+        self.filepath = filepath
+        self.filename = os.path.basename(self.filepath)
         self.data_block = []
         self.read_latex = read_latex
         self.threshold = threshold
@@ -22,7 +23,7 @@ class EduXtract:
 
 
     def read_file(self):
-        self.reader = self.reader(self.filename)
+        self.reader = self.reader(self.filepath)
         text = self.reader.read_file(self.read_latex)
         mapped_data = self.reader.map_data(text)
         self.data_block = self.reader.make_blocks(mapped_data)
@@ -49,7 +50,8 @@ class EduXtract:
         to_zip = []
         if ".docx" in files_types:
             docx_modified_filename = self.filename.replace(".docx", "_modified.docx")
-            self.writer.write2doc(self.filename.replace(".docx", "_modified.docx"))
+            print(self.filename)
+            self.writer.write2doc(docx_modified_filename)
             to_zip.append(docx_modified_filename)
         if ".xlsx" in files_types:
             csv_filename = self.filename.replace(".docx", ".csv")
@@ -64,9 +66,8 @@ class EduXtract:
             to_zip.append(csv_filename)
 
         zipfile_path = self.filename.split(".")[0]+".zip"
-        self.zipfilename = zipfile_path.split("/")[1]
+        self.zipfilename = zipfile_path
         zipfile_path = os.path.join(self.output_dir, self.zipfilename)
-        print(zipfile_path)
         try:
             with zipfile.ZipFile(zipfile_path, "w") as zipf:
                 for f in to_zip:

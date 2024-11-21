@@ -31,7 +31,6 @@ class DownloadRequest(BaseModel):
 
 
 
-
 @app.get("/")
 async def index():
     return {"message":"EduXtract"}
@@ -46,7 +45,7 @@ async def upload_file(file: UploadFile = File(...)):
     key_id = await generate_preview(file_path)
     session = sessions.create_session(key_id)
     session.filepath = file_path
-    session.xtract = EduXtract(filename=file_path, output_dir="outputs")
+    session.xtract = EduXtract(filepath=file_path, output_dir="outputs")
     info = session.xtract.get_info()
     preview_images = [f"/previews/{key_id}/{file}" for file in os.listdir(f"previews/{key_id}")]
     return {
