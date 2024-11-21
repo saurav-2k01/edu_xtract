@@ -50,7 +50,6 @@ class EduXtract:
         to_zip = []
         if ".docx" in files_types:
             docx_modified_filename = self.filename.replace(".docx", "_modified.docx")
-            print(self.filename)
             self.writer.write2doc(docx_modified_filename)
             to_zip.append(docx_modified_filename)
         if ".xlsx" in files_types:
